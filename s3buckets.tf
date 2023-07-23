@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_s3_bucket" "westbucket" {
   provider = aws.west
-  bucket   = "q3-q-west02bucket-app-user2023"
+  bucket   = "q3-q-west03bucket-app-user2023"
   acl      = "private"
 
   versioning {

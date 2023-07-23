@@ -24,7 +24,6 @@ resource "aws_codepipeline" "pipeline" {
   name     = "q3_q_pipeline"
   role_arn = aws_iam_role.pipeline.arn
 
-
   artifact_store {
     region   = "us-east-1"
     location = aws_s3_bucket.bucket.bucket
@@ -32,7 +31,7 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   artifact_store {
-    region   = "us-west-2"
+    region   = "us-west-1"
     location = aws_s3_bucket.westbucket.bucket
     type     = "S3"
   }
@@ -53,7 +52,6 @@ resource "aws_codepipeline" "pipeline" {
         ConnectionArn    = "arn:aws:codestar-connections:us-east-1:944723394512:connection/72560fc3-ca96-4134-97f2-30275faf451a"
         FullRepositoryId = "vitalemazo/Myq3SamplewebApp"
         BranchName       = "main"
-        #OAuthToken = "***"
       }
     }
   }
@@ -62,12 +60,14 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-      name            = "BuildAction"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
+      name             = "BuildAction"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["build_output"]
+
+      version = "1"
 
       configuration = {
         ProjectName = aws_codebuild_project.project.name
@@ -84,8 +84,8 @@ resource "aws_codepipeline" "pipeline" {
       owner           = "AWS"
       provider        = "ElasticBeanstalk"
       input_artifacts = ["build_output"]
-      version         = "2"
-      region          = "us-west-2" # Limitation need to go to another region cross-region action
+      version         = "1"
+      region          = "us-west-1" # Limitation need to go to another region cross-region action
 
       configuration = {
         ApplicationName = aws_elastic_beanstalk_application.q3_q_app.name
