@@ -35,15 +35,16 @@ resource "aws_codepipeline" "pipeline" {
     action {
       name             = "SourceAction"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
 
       configuration = {
-        Owner  = "***"
-        Repo   = "***"
-        Branch = "main"
+
+        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:944723394512:connection/72560fc3-ca96-4134-97f2-30275faf451a"
+        FullRepositoryId = "vitalemazo/MyQ2SamplewebApp"
+        BranchName       = "main"
         #OAuthToken = "***"
       }
     }
@@ -61,7 +62,7 @@ resource "aws_codepipeline" "pipeline" {
       version         = "1"
 
       configuration = {
-        ProjectName = aws_codebuild_project.project.name 
+        ProjectName = aws_codebuild_project.project.name
       }
     }
   }
@@ -80,9 +81,9 @@ resource "aws_codebuild_project" "project" {
   }
 
   environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
+    compute_type                = "BUILD_GENERAL1_MEDIUM"
     image                       = "mcr.microsoft.com/dotnet/framework/sdk:4.8" ## windows container with docker image
-    type                        = "WINDOWS_CONTAINER"
+    type                        = "WINDOWS_SERVER_2019_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
     environment_variable {
@@ -147,33 +148,33 @@ resource "aws_elastic_beanstalk_application" "q2_q_app" {
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "instance-profile"
+  name = "q2-q-instance-profile"
   role = aws_iam_role.instance_role.name
 }
 
 resource "aws_iam_role" "instance_role" {
-    name = "instance-role"
+  name = "q2-q-instance-role"
 
 
 
-    assume_role_policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-            {
-            Action = "sts:AssumeRole"
-            Effect = "Allow"
-            Principal = {
-                Service = "ec2.amazonaws.com"
-                }
-            },
-        ]
-    })
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
 }
 
 resource "aws_elastic_beanstalk_environment" "env" {
-  name                = "q2_q_environment"
+  name                = "q2qenvironment"
   application         = aws_elastic_beanstalk_application.q2_q_app.name
-  solution_stack_name = "64bit Windows Server 2019 v4.8.3 running IIS 10.0" ### another stack with dotnet4.8
+  solution_stack_name = "64bit Windows Server 2019 v2.11.6 running IIS 10.0" ### another stack with dotnet4.8
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
