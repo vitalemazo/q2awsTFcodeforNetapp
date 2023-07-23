@@ -2,21 +2,22 @@ provider "aws" {
   region = "us-east-1"
 }
 
+
 resource "aws_s3_bucket" "bucket" {
-bucket = "q2-q-bucket-app-user2023" // change this to a unique name
-acl = "private"
+  bucket = "q2-q-bucket-app-user2023" // change this to a unique name
+  acl    = "private"
 
 
 
-versioning {
-enabled = true
-}
+  versioning {
+    enabled = true
+  }
 
 
 
-lifecycle {
-prevent_destroy = true
-}
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_codepipeline" "pipeline" {
@@ -40,9 +41,9 @@ resource "aws_codepipeline" "pipeline" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        Owner      = "***"
-        Repo       = "***"
-        Branch     = "main"
+        Owner  = "***"
+        Repo   = "***"
+        Branch = "main"
         #OAuthToken = "***"
       }
     }
@@ -60,15 +61,19 @@ resource "aws_codepipeline" "pipeline" {
       version         = "1"
 
       configuration = {
-        ProjectName = aws_codebuild_project.example.name
+        ProjectName = aws_codebuild_project.project.name 
       }
     }
   }
 }
 
 resource "aws_codebuild_project" "project" {
-  name       = "q2_q_project"
+  name        = "q2_q_project"
   description = "Build project for Windows"
+
+  source {
+    type = "CODEPIPELINE"
+  }
 
   artifacts {
     type = "CODEPIPELINE"
@@ -99,19 +104,9 @@ resource "aws_codebuild_project" "project" {
   service_role = aws_iam_role.codebuild.arn
 }
 
-resource "aws_codepipeline_webhook" "webhook" {
-  name          = "q2_q_webook"
-  target_action = "SourceAction"
-  target_pipeline = aws_codepipeline.webhook.q2_q_webhook
-
-  authentication {
-    type     = "GITHUB_HMAC"
-    secret_token = "***gihub***"
-  }
-}
 
 resource "aws_iam_role" "pipeline" {
-  name = "q2_q_-pipeline-role"
+  name = "q2_q_pipeline-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -128,7 +123,7 @@ resource "aws_iam_role" "pipeline" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name = "q2_q_-codebuild-role"
+  name = "q2_q_codebuild-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -148,11 +143,41 @@ resource "aws_iam_role" "codebuild" {
 }
 
 resource "aws_elastic_beanstalk_application" "q2_q_app" {
-  name = "q2_q_-application"
+  name = "q2_q_application"
 }
 
-resource "aws_elastic_beanstalk_environment" "example" {
-  name = "q2_q_-environment"
-  application = aws_elastic_beanstalk_application.example.name
+resource "aws_iam_instance_profile" "instance_profile" {
+  name = "instance-profile"
+  role = aws_iam_role.instance_role.name
+}
+
+resource "aws_iam_role" "instance_role" {
+    name = "instance-role"
+
+
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+            Action = "sts:AssumeRole"
+            Effect = "Allow"
+            Principal = {
+                Service = "ec2.amazonaws.com"
+                }
+            },
+        ]
+    })
+}
+
+resource "aws_elastic_beanstalk_environment" "env" {
+  name                = "q2_q_environment"
+  application         = aws_elastic_beanstalk_application.q2_q_app.name
   solution_stack_name = "64bit Windows Server 2019 v4.8.3 running IIS 10.0" ### another stack with dotnet4.8
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "IamInstanceProfile"
+    value     = aws_iam_instance_profile.instance_profile.name
+  }
 }
