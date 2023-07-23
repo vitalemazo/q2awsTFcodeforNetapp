@@ -2,8 +2,25 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_s3_bucket" "bucket" {
+bucket = "q2-q-bucket-app-user2023" // change this to a unique name
+acl = "private"
+
+
+
+versioning {
+enabled = true
+}
+
+
+
+lifecycle {
+prevent_destroy = true
+}
+}
+
 resource "aws_codepipeline" "pipeline" {
-  name     = "mypipeline"
+  name     = "q2_q_pipeline"
   role_arn = aws_iam_role.pipeline.arn
 
   artifact_store {
@@ -50,7 +67,7 @@ resource "aws_codepipeline" "pipeline" {
 }
 
 resource "aws_codebuild_project" "project" {
-  name       = "myproject"
+  name       = "q2_q_project"
   description = "Build project for Windows"
 
   artifacts {
@@ -83,9 +100,9 @@ resource "aws_codebuild_project" "project" {
 }
 
 resource "aws_codepipeline_webhook" "webhook" {
-  name          = "mywebook"
+  name          = "q2_q_webook"
   target_action = "SourceAction"
-  target_pipeline = aws_codepipeline.webhook.mywebhook
+  target_pipeline = aws_codepipeline.webhook.q2_q_webhook
 
   authentication {
     type     = "GITHUB_HMAC"
@@ -94,7 +111,7 @@ resource "aws_codepipeline_webhook" "webhook" {
 }
 
 resource "aws_iam_role" "pipeline" {
-  name = "my-pipeline-role"
+  name = "q2_q_-pipeline-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -111,7 +128,7 @@ resource "aws_iam_role" "pipeline" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name = "my-codebuild-role"
+  name = "q2_q_-codebuild-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -130,12 +147,12 @@ resource "aws_iam_role" "codebuild" {
   # e.g., AWSCodePipelineFullAccess, AmazonS3FullAccess, etc.
 }
 
-resource "aws_elastic_beanstalk_application" "myapp" {
-  name = "my-application"
+resource "aws_elastic_beanstalk_application" "q2_q_app" {
+  name = "q2_q_-application"
 }
 
 resource "aws_elastic_beanstalk_environment" "example" {
-  name = "my-environment"
+  name = "q2_q_-environment"
   application = aws_elastic_beanstalk_application.example.name
   solution_stack_name = "64bit Windows Server 2019 v4.8.3 running IIS 10.0" ### another stack with dotnet4.8
 }
