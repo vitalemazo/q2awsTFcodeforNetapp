@@ -20,6 +20,14 @@ resource "aws_iam_role" "role" {
   })
 }
 
+
+resource "aws_codestarconnections_connection" "example" {
+  name          = "GitHub-vmazo"
+  provider_type = "GitHub"
+}
+
+
+
 resource "aws_codepipeline" "pipeline" {
   name     = "q3_q_pipeline"
   role_arn = aws_iam_role.pipeline.arn
