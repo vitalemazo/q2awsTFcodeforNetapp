@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "role" {
-  name = "q3q-service-role"
+  name = "q4q-service-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -22,14 +22,14 @@ resource "aws_iam_role" "role" {
 
 
 resource "aws_codestarconnections_connection" "example" {
-  name          = "GitHub-vmazo"
+  name          = "mygitconn"
   provider_type = "GitHub"
 }
 
 
 
 resource "aws_codepipeline" "pipeline" {
-  name     = "q3_q_pipeline"
+  name     = "q4_q_pipeline"
   role_arn = aws_iam_role.pipeline.arn
 
   artifact_store {
@@ -57,8 +57,8 @@ resource "aws_codepipeline" "pipeline" {
 
       configuration = {
 
-        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:944723394512:connection/72560fc3-ca96-4134-97f2-30275faf451a"
-        FullRepositoryId = "vitalemazo/Myq3SamplewebApp"
+        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:944723394512:connection/b4df9521-14cf-4a00-879b-cafe2bd6bb89"
+        FullRepositoryId = "vitalemazo/MyQ2SamplewebApp"
         BranchName       = "main"
       }
     }
@@ -96,7 +96,7 @@ resource "aws_codepipeline" "pipeline" {
       region          = "us-west-1" # Limitation need to go to another region cross-region action
 
       configuration = {
-        ApplicationName = aws_elastic_beanstalk_application.q3_q_app.name
+        ApplicationName = aws_elastic_beanstalk_application.q4_q_app.name
         EnvironmentName = aws_elastic_beanstalk_environment.env.name
       }
     }
@@ -107,7 +107,7 @@ resource "aws_codepipeline" "pipeline" {
 
 
 resource "aws_codebuild_project" "project" {
-  name        = "q3_q_project"
+  name        = "q4_q_project"
   description = "Build project for Windows"
 
   source {
@@ -145,7 +145,7 @@ resource "aws_codebuild_project" "project" {
 
 
 resource "aws_iam_role" "pipeline" {
-  name = "q3_q_pipeline-role"
+  name = "q4_q_pipeline-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -162,7 +162,7 @@ resource "aws_iam_role" "pipeline" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name = "q3_q_codebuild-role"
+  name = "q4_q_codebuild-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -181,17 +181,17 @@ resource "aws_iam_role" "codebuild" {
   # e.g., AWSCodePipelineFullAccess, AmazonS3FullAccess, etc.
 }
 
-resource "aws_elastic_beanstalk_application" "q3_q_app" {
-  name = "q3_q_application"
+resource "aws_elastic_beanstalk_application" "q4_q_app" {
+  name = "q4_q_application"
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "q3-q-instance-profile"
+  name = "q4-q-instance-profile"
   role = aws_iam_role.instance_role.name
 }
 
 resource "aws_iam_role" "instance_role" {
-  name = "q3-q-instance-role"
+  name = "q4-q-instance-role"
 
 
 
@@ -210,8 +210,8 @@ resource "aws_iam_role" "instance_role" {
 }
 
 resource "aws_elastic_beanstalk_environment" "env" {
-  name                = "q3qenvironment"
-  application         = aws_elastic_beanstalk_application.q3_q_app.name
+  name                = "q4qenvironment"
+  application         = aws_elastic_beanstalk_application.q4_q_app.name
   solution_stack_name = "64bit Windows Server 2019 v2.11.6 running IIS 10.0" ### another stack with dotnet4.8
 
   setting {
@@ -222,7 +222,7 @@ resource "aws_elastic_beanstalk_environment" "env" {
 }
 
 resource "aws_iam_policy" "s3_upload_policy" {
-  name        = "q3_q_s3_upload_policy"
+  name        = "q4_q_s3_upload_policy"
   description = "Policy to allow CodeBuild to upload to S3 bucket"
 
   policy = jsonencode({
@@ -234,8 +234,8 @@ resource "aws_iam_policy" "s3_upload_policy" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::q3-q-bucket-app-user2023/*",
-          "arn:aws:s3:::q3-q-bucket-app-user2023"
+          "arn:aws:s3:::q4-q-bucket-app-user2023/*",
+          "arn:aws:s3:::q4-q-bucket-app-user2023"
         ]
       },
     ]

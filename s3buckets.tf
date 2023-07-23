@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "bucket" {
-  bucket = "q3-q-bucket-app-user2023" // change this to a unique name
+  bucket = "q4-q-bucket-app-user2023" // change this to a unique name
   acl    = "private"
 
   versioning {
@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_s3_bucket" "westbucket" {
   provider = aws.west
-  bucket   = "q3-q-west03bucket-app-user2023"
+  bucket   = "q4-q-west03bucket-app-user2023"
   acl      = "private"
 
   versioning {

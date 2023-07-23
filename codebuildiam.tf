@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "codebuild_start_policy" {
-  name        = "q3_q_codebuild_start_policy"
+  name        = "q4_q_codebuild_start_policy"
   description = "Policy to allow CodePipeline to start CodeBuild"
 
   policy = jsonencode({
@@ -11,7 +11,7 @@ resource "aws_iam_policy" "codebuild_start_policy" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:codebuild:us-east-1:944723394512:project/q3_q_project"
+          "arn:aws:codebuild:us-east-1:944723394512:project/q4_q_project"
         ]
       },
     ]
@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_start_policy_attachment" {
 
 
 resource "aws_iam_policy" "codebuild_batchget_policy" {
-  name        = "q3_q_codebuild_batchget_policy"
+  name        = "q4_q_codebuild_batchget_policy"
   description = "Policy to allow CodePipeline to batch get builds in CodeBuild"
 
   policy = jsonencode({
@@ -37,7 +37,7 @@ resource "aws_iam_policy" "codebuild_batchget_policy" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:codebuild:us-east-1:944723394512:project/q3_q_project"
+          "arn:aws:codebuild:us-east-1:944723394512:project/q4_q_project"
         ]
       },
     ]
@@ -51,7 +51,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_batchget_policy_attachment"
 
 
 resource "aws_iam_policy" "codebuild_logs_policy" {
-  name        = "q3_q_codebuild_logs_policy"
+  name        = "q4_q_codebuild_logs_policy"
   description = "Policy to allow CodeBuild to create log streams in CloudWatch Logs"
 
   policy = jsonencode({
@@ -65,7 +65,7 @@ resource "aws_iam_policy" "codebuild_logs_policy" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:logs:us-east-1:944723394512:log-group:/aws/codebuild/q3_q_project:*"
+          "arn:aws:logs:us-east-1:944723394512:log-group:/aws/codebuild/q4_q_project:*"
         ]
       },
     ]
