@@ -26,13 +26,23 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "q2-q-bucket-app-user2023" // change this to a unique name
   acl    = "private"
 
-
-
   versioning {
     enabled = true
   }
 
+  lifecycle {
+    prevent_destroy = true
+  }
+}
 
+resource "aws_s3_bucket" "westbucket" {
+  provider = aws.west
+  bucket   = "q2-q-westbucket-app-user2023"
+  acl      = "private"
+
+  versioning {
+    enabled = true
+  }
 
   lifecycle {
     prevent_destroy = true
@@ -43,8 +53,16 @@ resource "aws_codepipeline" "pipeline" {
   name     = "q2_q_pipeline"
   role_arn = aws_iam_role.pipeline.arn
 
+
   artifact_store {
+    region   = "us-east-1"
     location = aws_s3_bucket.bucket.bucket
+    type     = "S3"
+  }
+
+  artifact_store {
+    region   = "us-west-2"
+    location = aws_s3_bucket.westbucket.bucket
     type     = "S3"
   }
 
@@ -96,6 +114,7 @@ resource "aws_codepipeline" "pipeline" {
       provider        = "ElasticBeanstalk"
       input_artifacts = ["build_output"]
       version         = "2"
+      region          = "us-west-2" # Limitation need to go to another region cross-region action
 
       configuration = {
         ApplicationName = aws_elastic_beanstalk_application.q2_q_app.name
