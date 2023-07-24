@@ -77,8 +77,8 @@ resource "aws_iam_policy" "codebuild_elasticbeanstalk_policy" {
     Statement = [
       {
         Action = [
-          "elasticbeanstalk:CreateApplicationVersion"
-        ]
+          "elasticbeanstalk:*"
+        ],
         Effect = "Allow"
         "Resource" : "*"
       },
