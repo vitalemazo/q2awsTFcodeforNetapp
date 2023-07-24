@@ -9,7 +9,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -23,6 +23,6 @@ resource "aws_s3_bucket" "westbucket" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }

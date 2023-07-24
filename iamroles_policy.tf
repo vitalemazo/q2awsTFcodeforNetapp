@@ -73,18 +73,25 @@ resource "aws_iam_policy" "codebuild_elasticbeanstalk_policy" {
   description = "Policy to allow CodePipeline to batch get builds in CodeBuild"
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
         Action = [
-          "elasticbeanstalk:*"
+          "elasticbeanstalk:*",
+          "elasticbeanstalk:UpdateEnvironment"
         ],
-        Effect = "Allow"
-        "Resource" : "*"
-      },
+        Effect   = "Allow",
+        Resource = "*",
+        Condition = {
+          StringEquals = {
+            "aws:RequestedRegion" : "us-west-1"
+          }
+        }
+      }
     ]
   })
 }
+
 
 
 
