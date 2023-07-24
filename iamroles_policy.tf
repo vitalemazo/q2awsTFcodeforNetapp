@@ -68,9 +68,35 @@ resource "aws_iam_policy" "codebuild_batchget_policy" {
   })
 }
 
+resource "aws_iam_policy" "codebuild_elasticbeanstalk_policy" {
+  name        = "q4_q_codebuild_elasticbeanstalk_policy"
+  description = "Policy to allow CodePipeline to batch get builds in CodeBuild"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "elasticbeanstalk:CreateApplicationVersion"
+        ]
+        Effect = "Allow"
+        "Resource" : "*"
+      },
+    ]
+  })
+}
+
+
+
+
 resource "aws_iam_role_policy_attachment" "codebuild_batchget_policy_attachment" {
   role       = aws_iam_role.pipeline.name
   policy_arn = aws_iam_policy.codebuild_batchget_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_elasticbeanstalk_policy_attachment" {
+  role       = aws_iam_role.pipeline.name
+  policy_arn = aws_iam_policy.codebuild_elasticbeanstalk_policy.arn
 }
 
 
@@ -206,3 +232,6 @@ resource "aws_iam_role" "role" {
     ]
   })
 }
+
+
+
