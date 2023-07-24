@@ -10,7 +10,7 @@ resource "aws_iam_policy" "codestar_policy" {
           "codestar-connections:UseConnection"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:codestar-connections:us-east-1:944723394512:connection/b4df9521-14cf-4a00-879b-cafe2bd6bb89"
+        Resource = "arn:aws:codestar-connections:us-east-1:944723394512:connection/1e13431d-bbee-4237-b64f-57eba468a405"
       }
     ]
   })
