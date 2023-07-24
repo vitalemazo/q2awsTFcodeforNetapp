@@ -2,7 +2,7 @@
 q2 Code for .net 4.8 not 4.5 app resources and pipline
 
 
-Q2 this is in terraform
+Q2 this is in terraform using cross region since us-east has limitations Deploy artifacts will be in us-west during pipline runs 
 
  automating .NET Framework deployment with AWS CodePipeline to Elastic Beanstalk, let me summarize the key points to building Ir project.
 
