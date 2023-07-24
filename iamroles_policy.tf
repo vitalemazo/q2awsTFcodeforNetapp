@@ -76,10 +76,7 @@ resource "aws_iam_policy" "codebuild_elasticbeanstalk_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = [
-          "elasticbeanstalk:*",
-          "elasticbeanstalk:UpdateEnvironment"
-        ],
+        Action   = ["elasticbeanstalk:*", "s3:*", "ec2:*", "autoscaling:*", "cloudformation:*"],
         Effect   = "Allow",
         Resource = "*",
         Condition = {
